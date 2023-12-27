@@ -1,0 +1,25 @@
+- **DotNet**
+    
+    FROM [mcr.mircrosoft.com/dotnet/sdk:7.0](http://mcr.mircrosoft.com/dotnet/sdk:7.0) AS build-env
+    
+    WORKDIR /app
+    
+    EXPOSE 80
+    
+    COPY *.csproj .
+    
+    RUN dotnet restore
+    
+    COPY . ./
+    
+    RUN dotnet publish -c Release -o out
+    
+    FROM [mcr.mircrosoft.com/dotnet/sdk:7.0](http://mcr.mircrosoft.com/dotnet/sdk:7.0) AS final-env
+    
+    WORKDIR /app
+    
+    COPY --from=build_env /app/out .
+    
+    ENTRYPOINT [”dotnet”,”File_name.dll”]
+    
+    =======================================

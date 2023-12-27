@@ -1,0 +1,34 @@
+- **React js**
+    - npm create vite
+    - npx create-react-app my-app
+    cd my-app
+    npm start
+    - npm install —>( Download Node-Modules) install Dependencies
+    
+    **Dockerfile Documentation link:**
+    
+    https://cloud.ibm.com/docs/codeengine?topic=codeengine-dockerfile
+    
+    =======================================
+    
+    npm install
+    
+    npm run build
+    
+    npm install -g serve
+    
+    CMD [”serve”,”-s”,”build”]
+    
+    =======================================
+    
+    FROM nodejs:16-alpine
+    
+    COPY . /app
+    WORKDIR /app
+    
+    RUN npm install
+    
+    EXPOSE 3000
+    ENTRYPOINT ["npm","run","start"]
+    
+    =========================================

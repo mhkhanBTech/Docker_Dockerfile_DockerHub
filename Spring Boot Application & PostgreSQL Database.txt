@@ -1,0 +1,65 @@
+- **How To Dockerize Spring Boot Application & PostgreSQL Database**
+    1. pull the docker postgres images.
+    
+    #docker pull postgres
+    
+    1. make a docker postgres container.
+    
+    #docker run --name postgres_con -d -p 5432:5432 -e **`POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin` -e `POSTGRES_DB`=mydb -v user/home/monir=bin/var/data**
+    
+    postgres
+    
+    =====================================================
+    
+    Spring Boot Application:
+    
+    Go to application. Properties file —>
+    
+    #Postgres configuration 
+    
+    ```
+    spring.datasource.diver-class-name=org.postgresql.Driver
+    spring.datasource.url=jdbc:postgresql://postgres_container_ip_address:5432/mydb
+    spring.datasource.username=admin
+    spring.datasource.password=admin
+    ```
+    
+    1. Make a spring boot dockerfile with target file.
+    
+    FROM openjdk:17
+    COPY target/*.jar testapp.jar
+    EXPOSE 8089
+    CMD ["mvn",”-jar”,"testapp.jar"]
+    
+    =================================
+    
+    4.make a spring boot dockerfile without target file:
+    
+    FROM openjdk:17-jdk-alpine as builder
+    RUN mkdir -p /app/source
+    COPY . /app/source
+    WORKDIR /app/source
+    RUN ./mvnw clean package
+    
+    FROM builder
+    COPY --from=builder /app/source/target/*.jar /app/testapp.jar
+    EXPOSE 8089
+    ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/testapp.jar"]
+    
+    =======================================================
+    
+    sudo docker build -t testapp_img .
+    
+    sudo docker run --name Testapp_con -d -p 8089:8089 testapp_img
+    
+    ============================================
+    
+    Simple spring boot dockerfile 
+    
+    FROM openjdk:17
+    WORKDIR app/
+    COPY . .
+    EXPOSE 2500
+    CMD ["mvn","spring-boot:run"]
+    
+    ============================================

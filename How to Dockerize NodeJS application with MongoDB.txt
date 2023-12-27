@@ -1,0 +1,55 @@
+- ****How to Dockerize NodeJS application with MongoDB****
+    
+    Dockerfile:
+    
+    FROM node:alpine
+    WORKDIR /usr/src/app
+    COPY . /package.json ./
+    
+    COPY . /package_lock.json ./
+    RUN npm install
+    
+    COPY ./src ./src
+    COPY ./ config.js ./
+    CMD ["npm",”start”]
+    
+    Make a Docker Compose File :
+    
+    Version: 3
+    services: 
+    
+         mongo_db:
+    
+              container_name: database_container
+    
+              images:mango:latest
+    
+              restart: always
+    
+              volumes:
+    
+                     -mongo-db:/data/db 
+    
+         app: 
+    
+              build: .
+    
+              ports: 
+    
+                   -4000:3000
+    
+         environment:
+    
+                   APP_NAME: LearnDocker
+    
+                   PORT: 3000
+    
+                   DB_URL: mongdb://mongo_db:27017/dockerlearn
+    
+         depends_on:
+    
+                   -mongo_db
+    
+    volumes:
+    
+           -mongo_db= {}

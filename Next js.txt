@@ -1,0 +1,33 @@
+npx create-next-app@latest Or yarn create next-app
+
+===============================================
+
+FROM node:14.17.0
+
+#Create app directory.
+
+RUN mkdir -p /usr/src/app 
+
+WORKDIR /usr/src/app
+
+#installing dependencies
+
+COPY package*.json .
+
+COPY yarn.lock .
+
+RUN yarn install
+
+#copyinfg source file
+
+COPY . .
+
+#Building app
+
+RUN yarn build
+
+EXPOSE 3000
+
+CMD [ ”yarn”,”start” ]
+
+=============================================
