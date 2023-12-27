@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Git-Clone') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Btechmonir/goapp.git']])
+            }
+        }
+        stage('Build-Image') {
+            steps {
+                sh 'cp /var/lib/jenkins/monir/* .'
+                sh 'docker build -t goapp .'
+                sh 'docker images'
+            }
+        }
+        stage('Container') {
+            steps {
+                sh 'docker rm -f Gopipeline1'
+                sh 'docker run --name Gopipeline1 -d -p 8007:8000 goapp'
+                sh 'docker ps'
+            }
+        }
+    }
+}
